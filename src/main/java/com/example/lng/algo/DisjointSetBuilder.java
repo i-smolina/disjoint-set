@@ -50,7 +50,7 @@ public class DisjointSetBuilder {
                 matrix[i][j] = Long.MIN_VALUE;
     }
 
-    public void buildIndex() {
+    private void buildIndex() {
         index = new int[matrix.length];
         for (int i = 0; i < index.length; i++)
             index[i] = i;
@@ -83,7 +83,7 @@ public class DisjointSetBuilder {
         return list;
     }
 
-    public void convertIndexToGroups(int[] index) {
+    private void convertIndexToGroups(int[] index) {
         groups = new HashMap<>();
         for (int i = 0; i < index.length; i++) {
             if (!groups.containsKey(index[i])) {
