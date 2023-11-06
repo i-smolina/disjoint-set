@@ -1,46 +1,43 @@
 package com.example.lng;
 
-import com.example.lng.algo.LinkList;
+import com.example.lng.algo.DisjointSetBuilder;
 import com.example.lng.algo.Parser;
 import com.example.lng.file.FileReader;
+import com.example.lng.file.FileWriter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 @SpringBootApplication
 public class LngApplication {
 
-	public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
-		SpringApplication.run(LngApplication.class, args);
+        SpringApplication.run(LngApplication.class, args);
 
-		FileReader reader = new FileReader();
-		List<String> lines = reader.readFile("/home/irina/prog/newjob/lng.txt");
+        Instant start = Instant.now();
 
-		int maxSize = 0;
-		String[] arr;
-		LinkList list = new LinkList();
-		for (String line : lines) {
-			arr = Parser.parse(line);
-			if (arr.length > maxSize)
-				maxSize = arr.length;
-			list.add(arr);
-		}
+        if (args.length < 1) {
+            System.out.println("Please enter filename:");
+            return;
+        }
+        String filename = args[0];
 
-		list.createMatrix(maxSize);
-		list.build(list.matrix);
+        FileReader reader = new FileReader();
+        List<String> lines = reader.readFile(filename);
 
-		//list.print();
+        DisjointSetBuilder builder = new DisjointSetBuilder();
+        List<String> result = builder.build(lines);
 
-//		String s ="\"\";\"79076513686\";\"79499289445\";\"79895211259\";\"79970144607\";\"79460148141\";\"79124811542\";\"79660572200\";\"79245307223\";\"79220239511\"";
-		String s = "\"\";\"79076513686\";\"79499289445\";\"79895211259\";\"79970144607\";\"79460148141\";\"79124811542\";\"79660572200\";\"79245307223\";\"79220239511\"";
-		//Parser.parse(s);
+        FileWriter writer = new FileWriter();
+        writer.writeFile(Path.of(filename).getParent() + "/output.txt", result, builder.getGroupsCount());
 
-		String line = "\"8383\"200000741652251\"";
-//		System.out.println(Parser.isFalse(line));
-//		System.out.println(Parser.isFalse(s));
-	}
-
+        Instant end = Instant.now();
+        System.out.println("Duration:" + Duration.between(start, end).getSeconds() + " seconds");
+    }
 }

@@ -1,37 +1,32 @@
 package com.example.lng.algo;
 
-import org.springframework.util.NumberUtils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
-    public List<String[]> list = new ArrayList<>();
-    public List<HashMap<String, String>> map = new LinkedList<>();
+    private static final String REGEX_LONG = "\\d+";
+    private static final String REGEX_INCORRECT = "\\d+\"\\d+";
 
-    public static boolean isFalse(String line) {
-        String wrong = "\\d+\"\\d+";
-        Pattern pattern = Pattern.compile(wrong);
+    public static boolean isIncorrect(String line) {
+        Pattern pattern = Pattern.compile(REGEX_INCORRECT);
         Matcher matcher = pattern.matcher(line);
         return matcher.find();
     }
 
-    public static String[] parse(String s) {
-
-        String regex = "\\d+";
-        Pattern pattern = Pattern.compile(regex);
+    public static long[] parse(String s) {
+        Pattern pattern = Pattern.compile(REGEX_LONG);
         String[] values = s.split(";");
+        long[] res = new long[values.length];
         for (int i = 0; i < values.length; i++) {
+            if (isIncorrect(values[i])) {
+                System.out.println("incorrect line: " + values[i]);
+                continue;
+            }
             Matcher matcher = pattern.matcher(values[i]);
             if (matcher.find()) {
-                values[i] = values[i].substring(matcher.start(), matcher.end());
-            } else values[i] = "";
-
+                res[i] = Long.parseLong(values[i].substring(matcher.start(), matcher.end()));
+            } else res[i] = Long.MIN_VALUE;
         }
-        return values;
+        return res;
     }
 }

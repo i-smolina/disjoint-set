@@ -9,20 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileReader {
-    private List<String> list = new ArrayList<>();
-    public int maxSize;
-
-    public List<String> readFile(String filename) throws IOException {
-        Path path = Paths.get(filename);
-        String str;
-        try (BufferedReader reader = Files.newBufferedReader(path)) {
-            while ((str=reader.readLine())!=null) {
-                list.add(str);
+    public List<String> readFile(String filename) {
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(filename))) {
+            String str;
+            while ((str = reader.readLine()) != null) {
+                lines.add(str);
             }
+        } catch (IOException e) {
+            System.out.println("Error: " + e);
         }
-        catch(IOException e) {
-
-        }
-       return list;
+        return lines;
     }
 }
