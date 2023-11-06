@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 public class DisjointSetBuilder {
     List<String> lines;
-    long[][] matrix;
+    double[][] matrix;
     int[] index;
     Map<Integer, List<Integer>> groups;
     int countGroupsMore1Element;
@@ -28,26 +28,26 @@ public class DisjointSetBuilder {
     }
 
     private void convertLinesToMatrix() {
-        List<long[]> longList = new ArrayList<>();
+        List<double[]> doubleList = new ArrayList<>();
         int dimY = 0;
         for (String line : lines) {
-            long[] bufArray = Parser.parse(line);
+            double[] bufArray = Parser.parse(line);
             if (bufArray.length > dimY)
                 dimY = bufArray.length;
-            longList.add(bufArray);
+            doubleList.add(bufArray);
         }
-        matrix = new long[longList.size()][dimY];
+        matrix = new double[doubleList.size()][dimY];
         initMatrix(matrix, dimY);
 
-        for (int i = 0; i < longList.size(); i++) {
-            System.arraycopy(longList.get(i), 0, matrix[i], 0, longList.get(i).length);
+        for (int i = 0; i < doubleList.size(); i++) {
+            System.arraycopy(doubleList.get(i), 0, matrix[i], 0, doubleList.get(i).length);
         }
     }
 
-    private void initMatrix(long[][] matrix, int dimY) {
+    private void initMatrix(double[][] matrix, int dimY) {
         for (int i = 0; i < matrix.length; i++)
             for (int j = 0; j < dimY; j++)
-                matrix[i][j] = Long.MIN_VALUE;
+                matrix[i][j] = Double.MIN_VALUE;
     }
 
     private void buildIndex() {
@@ -55,9 +55,9 @@ public class DisjointSetBuilder {
         for (int i = 0; i < index.length; i++)
             index[i] = i;
         for (int j = 0; j < matrix[0].length; j++) {
-            Map<Long, Integer> set = new HashMap<>();
+            Map<Double, Integer> set = new HashMap<>();
             for (int i = 0; i < matrix.length; i++) {
-                if (matrix[i][j] == Long.MIN_VALUE) {
+                if (matrix[i][j] == Double.MIN_VALUE) {
                     continue;
                 }
                 if (!set.containsKey(matrix[i][j])) {

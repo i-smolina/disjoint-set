@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
-    private static final String REGEX_LONG = "\\d+";
+    private static final String REGEX_DOUBLE = "\\d+\\.*\\d*";
     private static final String REGEX_INCORRECT = "\\d+\"\\d+";
 
     public static boolean isIncorrect(String line) {
@@ -13,10 +13,10 @@ public class Parser {
         return matcher.find();
     }
 
-    public static long[] parse(String s) {
-        Pattern pattern = Pattern.compile(REGEX_LONG);
+    public static double[] parse(String s) {
+        Pattern pattern = Pattern.compile(REGEX_DOUBLE);
         String[] values = s.split(";");
-        long[] res = new long[values.length];
+        double[] res = new double[values.length];
         for (int i = 0; i < values.length; i++) {
             if (isIncorrect(values[i])) {
                 System.out.println("incorrect line: " + values[i]);
@@ -24,8 +24,8 @@ public class Parser {
             }
             Matcher matcher = pattern.matcher(values[i]);
             if (matcher.find()) {
-                res[i] = Long.parseLong(values[i].substring(matcher.start(), matcher.end()));
-            } else res[i] = Long.MIN_VALUE;
+                res[i] = Double.parseDouble(values[i].substring(matcher.start(), matcher.end()));
+            } else res[i] = Double.MIN_VALUE;
         }
         return res;
     }
